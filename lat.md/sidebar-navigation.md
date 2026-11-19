@@ -278,7 +278,7 @@ The grouped Appearance preferences use one shared logical text/control grid in [
 
 The theme picker collapses to seven presets behind an "N more…" tile; expanding it reveals the rest plus a trailing "+" card that opens the theme creator.
 
-[[src/renderer/src/components/settings/AppearancePane.tsx]] renders the "+" card only while `showAllThemes` is true, so it never competes with the "N more…" tile in the collapsed grid. The card uses the quiet `.settings-theme-add` tile styling in [[src/renderer/src/assets/main.css]] and opens a nested [[src/renderer/src/components/modal/AppModal.tsx#AppModal]] titled "Theme Creator" above the settings modal, stacked at `z-index` 300/301 by `.theme-creator-modal`. The dialog body is intentionally empty until the editor lands.
+[[src/renderer/src/components/settings/AppearancePane.tsx]] renders the "+" card only while `showAllThemes` is true, so it never competes with the "N more…" tile in the collapsed grid. The card uses the quiet `.settings-theme-add` tile styling in [[src/renderer/src/assets/main.css]] and opens a nested [[src/renderer/src/components/modal/AppModal.tsx#AppModal]] titled "Theme Creator" above the settings modal, stacked at `z-index` 300/301 by `.theme-creator-modal`. The dialog body is now the three-column colour editor described in [[theme-creator]]; it keeps a session draft and does not save or apply a theme yet.
 
 ### Migration path rendering
 

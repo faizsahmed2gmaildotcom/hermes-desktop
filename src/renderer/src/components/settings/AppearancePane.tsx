@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Check, Plus, X } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 import { Toggle } from "../common/Toggle";
-import { AppModal, AppModalTitle } from "../modal/AppModal";
+import ThemeCreator from "./theme-creator/ThemeCreator";
 import { useTheme } from "../ThemeProvider";
 import { useFont } from "../FontProvider";
 import { THEMES, FONT_OPTIONS } from "../../constants";
@@ -19,8 +19,7 @@ export default function AppearancePane(): React.JSX.Element {
   const { theme, setTheme, rounded, setRounded } = useTheme();
   const { font, setFont } = useFont();
   const [showAllThemes, setShowAllThemes] = useState(false);
-  // The creator is still an empty shell; opening it proves the nested modal
-  // stacks above Settings.
+  // The creator keeps its draft in memory for the life of the pane.
   const [creatorOpen, setCreatorOpen] = useState(false);
   // Hardware acceleration is fixed pre-ready, so a changed preference only
   // applies after a relaunch; `savedPref` tracks what's on disk, `bootPref`
@@ -112,7 +111,7 @@ export default function AppearancePane(): React.JSX.Element {
               type="button"
               className="settings-theme-card settings-theme-add"
               onClick={() => setCreatorOpen(true)}
-              aria-label={t("settings.theme.creator")}
+              aria-label={t("settings.theme.creator.title")}
             >
               <Plus size={50} />
             </button>
@@ -120,30 +119,7 @@ export default function AppearancePane(): React.JSX.Element {
         </div>
       </div>
 
-      <AppModal
-        open={creatorOpen}
-        onOpenChange={setCreatorOpen}
-        className="theme-creator-modal"
-        overlayClassName="theme-creator-modal-overlay"
-        labelledBy="theme-creator-title"
-      >
-        <div className="theme-creator-header">
-          <AppModalTitle
-            id="theme-creator-title"
-            className="theme-creator-title"
-          >
-            {t("settings.theme.creator")}
-          </AppModalTitle>
-          <button
-            type="button"
-            className="settings-modal-close"
-            onClick={() => setCreatorOpen(false)}
-            aria-label={t("common.close")}
-          >
-            <X size={18} />
-          </button>
-        </div>
-      </AppModal>
+      <ThemeCreator open={creatorOpen} onOpenChange={setCreatorOpen} />
 
       {/* Grouped preferences — one card, row dividers, control on the right. */}
       <div className="settings-group">

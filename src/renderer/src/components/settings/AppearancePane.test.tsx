@@ -1,6 +1,5 @@
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ReactNode } from "react";
 // @ts-expect-error Node built-ins are available to Vitest, but intentionally
 // excluded from the renderer application's type environment.
 import { readFileSync } from "node:fs";
@@ -54,29 +53,23 @@ vi.mock("../useI18n", () => ({
   useI18n: () => ({ t: (key: string) => translations.get(key) ?? key }),
 }));
 
-// AppModal renders through a Radix portal; this test only exercises the open
-// state, so stub it to keep the render free of portals.
-vi.mock("../modal/AppModal", () => ({
-  AppModal: ({
+// The creator renders through a nested Radix portal; this test only exercises
+// the open state, so stub it to keep the render free of portals.
+vi.mock("./theme-creator/ThemeCreator", () => ({
+  default: ({
     open,
     onOpenChange,
-    children,
   }: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    children: ReactNode;
   }) =>
     open ? (
       <div data-testid="theme-creator">
-        {children}
         <button type="button" onClick={() => onOpenChange(false)}>
           mock-close
         </button>
       </div>
     ) : null,
-  AppModalTitle: ({ children }: { children: ReactNode }) => (
-    <h2>{children}</h2>
-  ),
 }));
 
 function installGpuStatus(): void {
@@ -211,7 +204,7 @@ describe("theme creator shell", () => {
   it("opens from the + tile and closes again", () => {
     // @lat: [[sidebar-navigation#Settings modal#Theme creator]]
     translations.set("settings.theme.more", "5 more…");
-    translations.set("settings.theme.creator", "Theme Creator");
+    translations.set("settings.theme.creator.title", "Theme Creator");
 
     const { getByRole, getByTestId, queryByTestId } = render(
       <AppearancePane />,
