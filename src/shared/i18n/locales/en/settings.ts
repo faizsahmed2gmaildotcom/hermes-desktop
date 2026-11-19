@@ -45,7 +45,7 @@ export default {
     more: "{{count}} more…",
     creator: {
       title: "Theme Creator",
-      simpleMode: "Simple mode",
+      simpleMode: "Simple Mode",
       appearance: "Appearance",
       background: "Background",
       accent: "Accent",
