@@ -10714,6 +10714,20 @@ body:has(.shell-vibrant),
   background: color-mix(in srgb, var(--text-primary) 8%, transparent);
 }
 
+/* "+" tile — shown after the theme grid is expanded. */
+.settings-theme-add {
+  align-items: center;
+  justify-content: center;
+  min-height: 84px;
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+}
+
+.settings-theme-add:hover {
+  color: var(--text-secondary);
+  background: color-mix(in srgb, var(--text-primary) 8%, transparent);
+}
+
 /* Live preview rendered with the target theme's own variables */
 .settings-theme-preview {
   display: flex;
@@ -10923,7 +10937,6 @@ body:has(.shell-vibrant),
 .settings-language-trigger:hover {
   border-color: var(--border-bright);
 }
-
 .settings-language-trigger:disabled {
   opacity: 0.6;
   cursor: not-allowed;

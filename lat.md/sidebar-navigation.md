@@ -274,6 +274,12 @@ The left nav is two labelled groups — **General** (Appearance, Language, Notif
 
 The grouped Appearance preferences use one shared logical text/control grid in [[src/renderer/src/components/settings/AppearancePane.tsx]], so translated labels, wrapped hints, and differently sized controls keep a stable column and vertical alignment. The control column wraps long segment labels, stacks below the copy in narrow containers, and follows document direction for Arabic and Hebrew instead of relying on physical left/right positioning.
 
+### Expanded theme grid
+
+The theme picker starts with seven preset cards and an "N more…" tile; expanding it reveals the full registry followed by a trailing "+" card.
+
+[[src/renderer/src/components/settings/AppearancePane.tsx]] renders the "+" card only while `showAllThemes` is true, so it never competes with the "N more…" tile in the collapsed grid. The card uses the quiet `.settings-theme-add` tile styling in [[src/renderer/src/assets/main.css]]. Its click handler is the placeholder `openThemeCreator`, which logs `openThemeCreator triggered!` to the renderer console until a real theme editor replaces it.
+
 ### Migration path rendering
 
 Migration banners display filesystem paths as text inside trusted localized markup, preserving the exact path without interpreting it as HTML.

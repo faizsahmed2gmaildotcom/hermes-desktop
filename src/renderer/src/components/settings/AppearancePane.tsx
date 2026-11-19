@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Check } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 import { Toggle } from "../common/Toggle";
 import { useTheme } from "../ThemeProvider";
 import { useFont } from "../FontProvider";
@@ -11,6 +11,10 @@ const GPU_MODES: GpuPreferenceMode[] = ["auto", "on", "off"];
 // Show two rows of the 4-col grid up front (7 themes + a "more" tile); the
 // rest stay one click away so the pane opens tidy.
 const THEME_PREVIEW_COUNT = 7;
+
+function openThemeCreator(): void {
+  console.log("openThemeCreator triggered!");
+}
 
 /** Theme, rounded corners, interface font, and hardware acceleration. */
 export default function AppearancePane(): React.JSX.Element {
@@ -101,6 +105,16 @@ export default function AppearancePane(): React.JSX.Element {
               onClick={() => setShowAllThemes(true)}
             >
               {t("settings.theme.more", { count: hiddenThemeCount })}
+            </button>
+          )}
+          {showAllThemes && (
+            <button
+              type="button"
+              className="settings-theme-card settings-theme-add"
+              onClick={openThemeCreator}
+              aria-label="Add theme"
+            >
+              <Plus size={50} />
             </button>
           )}
         </div>
