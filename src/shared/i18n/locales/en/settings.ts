@@ -43,6 +43,7 @@ export default {
     light: "Light",
     dark: "Dark",
     more: "{{count}} more…",
+    creator: "Theme Creator",
   },
   roundedCorners: {
     label: "Rounded corners",

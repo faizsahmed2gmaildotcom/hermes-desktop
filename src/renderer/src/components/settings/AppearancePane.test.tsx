@@ -1,5 +1,6 @@
-import { render, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { ReactNode } from "react";
 // @ts-expect-error Node built-ins are available to Vitest, but intentionally
 // excluded from the renderer application's type environment.
 import { readFileSync } from "node:fs";
@@ -51,6 +52,31 @@ vi.mock("../ThemeProvider", () => ({ useTheme: () => theme }));
 vi.mock("../FontProvider", () => ({ useFont: () => font }));
 vi.mock("../useI18n", () => ({
   useI18n: () => ({ t: (key: string) => translations.get(key) ?? key }),
+}));
+
+// AppModal renders through a Radix portal; this test only exercises the open
+// state, so stub it to keep the render free of portals.
+vi.mock("../modal/AppModal", () => ({
+  AppModal: ({
+    open,
+    onOpenChange,
+    children,
+  }: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    children: ReactNode;
+  }) =>
+    open ? (
+      <div data-testid="theme-creator">
+        {children}
+        <button type="button" onClick={() => onOpenChange(false)}>
+          mock-close
+        </button>
+      </div>
+    ) : null,
+  AppModalTitle: ({ children }: { children: ReactNode }) => (
+    <h2>{children}</h2>
+  ),
 }));
 
 function installGpuStatus(): void {
@@ -173,5 +199,32 @@ describe("AppearancePane translated preference layout contract", () => {
       cssBlock(".settings-row-control,\n  .settings-seg", narrowContainer),
       "justify-content: flex-start;",
     );
+  });
+});
+
+describe("theme creator shell", () => {
+  beforeEach(() => {
+    translations.clear();
+    installGpuStatus();
+  });
+
+  it("opens from the + tile and closes again", () => {
+    // @lat: [[sidebar-navigation#Settings modal#Theme creator]]
+    translations.set("settings.theme.more", "5 more…");
+    translations.set("settings.theme.creator", "Theme Creator");
+
+    const { getByRole, getByTestId, queryByTestId } = render(
+      <AppearancePane />,
+    );
+
+    expect(queryByTestId("theme-creator")).toBeNull();
+
+    fireEvent.click(getByRole("button", { name: "5 more…" }));
+    fireEvent.click(getByRole("button", { name: "Theme Creator" }));
+
+    expect(getByTestId("theme-creator")).toBeInTheDocument();
+
+    fireEvent.click(getByRole("button", { name: "mock-close" }));
+    expect(queryByTestId("theme-creator")).toBeNull();
   });
 });

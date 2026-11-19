@@ -10731,6 +10731,21 @@ body:has(.shell-vibrant),
   outline-color: var(--text-muted);
 }
 
+/* Theme creator header and title — the dialog block sits next to
+   `.app-modal-content`, where its z-index wins over the base. */
+.theme-creator-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.theme-creator-title {
+  margin: 0;
+}
+
 /* Live preview rendered with the target theme's own variables */
 .settings-theme-preview {
   display: flex;
@@ -11165,6 +11180,23 @@ body:has(.shell-vibrant),
   z-index: 201;
   margin: auto;
   outline: none;
+}
+
+/* Theme creator modal — nested above Settings (base 200/201) with a lighter
+   scrim so the doubled dim over Settings does not read as black. */
+.theme-creator-modal {
+  z-index: 301;
+  width: min(760px, calc(100vw - 48px));
+  height: fit-content;
+  min-height: 200px;
+  max-height: 80vh;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.theme-creator-modal-overlay {
+  z-index: 300;
+  background: rgba(0, 0, 0, 0.25);
 }
 
 /* Appearance modal */
@@ -18178,7 +18210,8 @@ body:has(.shell-vibrant),
 .agents-create-modal,
 .follow-us-modal,
 .discover-modal,
-.schedules-modal {
+.schedules-modal,
+.theme-creator-modal {
   background: color-mix(in srgb, var(--bg-secondary) 97%, transparent);
   backdrop-filter: blur(30px) saturate(1.5);
   -webkit-backdrop-filter: blur(30px) saturate(1.5);
