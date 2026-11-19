@@ -10721,11 +10721,14 @@ body:has(.shell-vibrant),
   min-height: 84px;
   color: var(--text-muted);
   background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+  outline: 2px dotted var(--border);
+  outline-offset: -3px;
 }
 
 .settings-theme-add:hover {
   color: var(--text-secondary);
   background: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  outline-color: var(--text-muted);
 }
 
 /* Live preview rendered with the target theme's own variables */
