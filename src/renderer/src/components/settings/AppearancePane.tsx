@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Check, Plus } from "lucide-react";
 import { Toggle } from "../common/Toggle";
 import ThemeCreator from "./theme-creator/ThemeCreator";
-import { useTheme } from "../ThemeProvider";
+import { CUSTOM_THEME_ID, useTheme } from "../ThemeProvider";
 import { useFont } from "../FontProvider";
 import { THEMES, FONT_OPTIONS } from "../../constants";
 import { useI18n } from "../useI18n";
@@ -61,6 +61,7 @@ export default function AppearancePane(): React.JSX.Element {
   const visibleThemes = showAllThemes
     ? THEMES
     : THEMES.slice(0, THEME_PREVIEW_COUNT);
+  const creatorActive = theme === CUSTOM_THEME_ID;
 
   return (
     <div className="settings-modal-pane">
@@ -109,10 +110,15 @@ export default function AppearancePane(): React.JSX.Element {
           {showAllThemes && (
             <button
               type="button"
-              className="settings-theme-card settings-theme-add"
+              className={`settings-theme-card settings-theme-add ${creatorActive ? "active" : ""}`}
               onClick={() => setCreatorOpen(true)}
               aria-label={t("settings.theme.creator.title")}
             >
+              {creatorActive && (
+                <span className="settings-theme-card-check">
+                  <Check size={14} />
+                </span>
+              )}
               <Plus size={50} />
             </button>
           )}

@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { X } from "lucide-react";
 import { AppModal, AppModalTitle } from "../../modal/AppModal";
 import { Toggle } from "../../common/Toggle";
 import type { SelectMenuOption } from "../../common/SelectMenu";
+import { useTheme } from "../../ThemeProvider";
 import { useI18n } from "../../useI18n";
 import { rgbaToHsva, type HSVA } from "../../../theme/color";
 import {
@@ -45,12 +46,18 @@ export default function ThemeCreator({
   onOpenChange,
 }: ThemeCreatorProps): React.JSX.Element {
   const { t } = useI18n();
+  const { applyCustomPalette } = useTheme();
   const [simpleMode, setSimpleMode] = useState(true);
   const [targets, setTargets] = useState<ThemeToken[]>([...SEED_TOKENS]);
   const [states, setStates] =
     useState<Map<ThemeToken, TokenState>>(initialStates);
 
   const palette = useMemo(() => resolvePalette(states), [states]);
+
+  // Opening applies the draft at once; every later edit re-applies it.
+  useEffect(() => {
+    if (open) applyCustomPalette(palette.colors);
+  }, [open, palette, applyCustomPalette]);
 
   const simpleLabels: Record<SeedToken, string> = {
     "bg-primary": t("settings.theme.creator.appearance"),

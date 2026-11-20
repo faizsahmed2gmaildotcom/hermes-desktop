@@ -47,7 +47,10 @@ const font = vi.hoisted(() => ({
 
 const translations = vi.hoisted(() => new Map<string, string>());
 
-vi.mock("../ThemeProvider", () => ({ useTheme: () => theme }));
+vi.mock("../ThemeProvider", () => ({
+  CUSTOM_THEME_ID: "custom",
+  useTheme: () => theme,
+}));
 vi.mock("../FontProvider", () => ({ useFont: () => font }));
 vi.mock("../useI18n", () => ({
   useI18n: () => ({ t: (key: string) => translations.get(key) ?? key }),
@@ -199,6 +202,22 @@ describe("theme creator shell", () => {
   beforeEach(() => {
     translations.clear();
     installGpuStatus();
+    theme.theme = "light";
+  });
+
+  it("marks the + tile as selected while a custom theme is applied", () => {
+    // @lat: [[theme-creator#Live application]]
+    theme.theme = "custom";
+    translations.set("settings.theme.more", "5 more…");
+    translations.set("settings.theme.creator.title", "Theme Creator");
+
+    const { getByRole } = render(<AppearancePane />);
+
+    fireEvent.click(getByRole("button", { name: "5 more…" }));
+
+    expect(getByRole("button", { name: "Theme Creator" })).toHaveClass(
+      "active",
+    );
   });
 
   it("opens from the + tile and closes again", () => {

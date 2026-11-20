@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
+import { ThemeProvider } from "../../ThemeProvider";
 import ThemeCreator from "./ThemeCreator";
 
 const translations = vi.hoisted(
@@ -54,7 +55,11 @@ vi.mock("../../modal/AppModal", () => ({
 }));
 
 function renderCreator(): void {
-  render(<ThemeCreator open onOpenChange={vi.fn()} />);
+  render(
+    <ThemeProvider>
+      <ThemeCreator open onOpenChange={vi.fn()} />
+    </ThemeProvider>,
+  );
 }
 
 function triggers(): HTMLElement[] {
@@ -96,7 +101,29 @@ function alphaFields(): HTMLInputElement[] {
 
 describe("Theme Creator", () => {
   beforeEach(() => {
+    localStorage.clear();
+    document.documentElement.removeAttribute("style");
+    document.documentElement.removeAttribute("data-theme");
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      value: vi.fn().mockReturnValue({
+        matches: false,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      }),
+    });
     renderCreator();
+  });
+
+  it("applies the draft palette to the document while open", () => {
+    // @lat: [[theme-creator#Live application]]
+    const style = document.documentElement.style;
+    expect(document.documentElement.getAttribute("data-theme")).toBe("custom");
+    expect(style.getPropertyValue("--bg-primary")).toBe("rgba(33, 33, 33, 1)");
+
+    fireEvent.change(hexFields()[0], { target: { value: "0000FF" } });
+
+    expect(style.getPropertyValue("--bg-primary")).toBe("rgba(0, 0, 255, 1)");
   });
 
   it("opens in simple mode with three disabled alias pickers", () => {

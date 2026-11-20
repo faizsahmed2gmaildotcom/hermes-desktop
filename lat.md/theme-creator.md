@@ -1,8 +1,15 @@
 # Theme creator
 
-The Theme Creator is a nested modal that edits all 31 theme tokens through three colour pickers; it keeps a session draft and does not save, name, or apply a theme yet.
+The Theme Creator is a nested modal that edits all 31 theme tokens through three colour pickers; it keeps a session draft and applies it live as inline theme variables, without saving or naming a theme.
 
 [[src/renderer/src/components/settings/theme-creator/ThemeCreator.tsx#ThemeCreator]] opens above the Settings modal through the shared [[src/renderer/src/components/modal/AppModal.tsx#AppModal]] shell. [[src/renderer/src/components/settings/AppearancePane.tsx]] owns only the `creatorOpen` state and the trailing "+" tile, so closing and reopening the creator preserves its draft for the life of the pane.
+
+## Live application
+
+Opening the creator applies its draft palette at once, and every later edit rewrites it: the document runs on `data-theme="custom"` with all 31 tokens set as inline custom properties.
+
+[[src/renderer/src/components/ThemeProvider.tsx#ThemeProvider]] owns that write and marks the selection with [[src/renderer/src/components/ThemeProvider.tsx#CUSTOM_THEME_ID]], a memory-only id that never reaches `localStorage`; the stored id stays on the last built-in theme. Selecting a built-in card removes all 31 properties and restores that theme, while the creator keeps its draft for the next open. Native window chrome, chat beams and thinking orbs read the context's `resolvedAppearance`, derived from `--bg-primary` through [[src/renderer/src/theme/color.ts#isLightColor]], so a light custom palette stays light wherever the tokens do not reach. `data-theme="custom"` has no CSS block, so rules keyed to a light theme id — the brand mark, for one — do not follow a light custom palette; that gap is accepted for this proof of concept. The "+" tile carries the same active ring and check as a theme card, without previewing the palette.
+
 
 ## Simple mode
 
