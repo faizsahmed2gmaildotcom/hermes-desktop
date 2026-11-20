@@ -148,6 +148,11 @@ export function rgbaToHex(rgba: RGBA): string {
   return `#${rgbaToHexDigits(rgba)}`;
 }
 
+/** CSS colour for an inline theme token; channels round for stable output. */
+export function rgbaToCss(rgba: RGBA): string {
+  return `rgba(${Math.round(rgba.r)}, ${Math.round(rgba.g)}, ${Math.round(rgba.b)}, ${rgba.a})`;
+}
+
 /** Linear sRGB interpolation, matching `color-mix(in srgb)` closely enough. */
 export function mix(a: RGBA, b: RGBA, amount: number): RGBA {
   const t = clamp(amount, 0, 1);

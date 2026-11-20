@@ -14,7 +14,6 @@ import { isImeComposing } from "./keyboard";
 import { useI18n } from "../../components/useI18n";
 import { useChatPreferences } from "../../components/ChatPreferencesProvider";
 import { useTheme } from "../../components/ThemeProvider";
-import { THEMES } from "../../constants";
 import { SLASH_COMMANDS, type SlashCommand } from "./slashCommands";
 import { SlashCommandIcon } from "./slash/SlashCommandIcon";
 import {
@@ -33,10 +32,6 @@ import {
 import { AttachmentChip } from "../../components/AttachmentChip";
 import { ContextGauge, type ContextUsage } from "./ContextGauge";
 import type { Attachment } from "../../../../shared/attachments";
-
-const THEME_APPEARANCE = new Map(
-  THEMES.map((theme) => [theme.id, theme.appearance]),
-);
 
 export interface ChatInputHandle {
   setText(text: string): void;
@@ -99,8 +94,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
   ): React.JSX.Element {
     const { t } = useI18n();
     const { spellcheckEnabled } = useChatPreferences();
-    const { resolved: resolvedTheme } = useTheme();
-    const beamTheme = THEME_APPEARANCE.get(resolvedTheme) ?? "dark";
+    const { resolvedAppearance: beamTheme } = useTheme();
     const [input, setInputState] = useState("");
     const inputRevisionRef = useRef(0);
     const setInput = useCallback(

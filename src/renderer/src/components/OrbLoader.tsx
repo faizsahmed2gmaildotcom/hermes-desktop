@@ -4,10 +4,7 @@ import {
   type OrbSize,
 } from "thinking-orbs";
 import type { CSSProperties } from "react";
-import { THEMES } from "../constants";
 import { useTheme } from "./ThemeProvider";
-
-const THEME_APPEARANCE = new Map(THEMES.map((t) => [t.id, t.appearance]));
 
 /** Boundary between the two shipped design presets (20 inline, 64 avatar). */
 const PRESET_MIDPOINT = 42;
@@ -47,8 +44,7 @@ export function OrbLoader({
   invert,
   ...rest
 }: OrbLoaderProps): React.JSX.Element {
-  const { resolved } = useTheme();
-  const appearance = THEME_APPEARANCE.get(resolved) ?? "dark";
+  const { resolvedAppearance: appearance } = useTheme();
   const orbTheme = invert
     ? appearance === "dark"
       ? "light"

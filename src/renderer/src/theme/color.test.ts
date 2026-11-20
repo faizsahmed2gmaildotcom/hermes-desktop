@@ -9,6 +9,7 @@ import {
   normalizeHue,
   parseHex,
   perceivedLuminance,
+  rgbaToCss,
   rgbaToHex,
   rgbaToHexDigits,
   rgbaToHsva,
@@ -109,5 +110,14 @@ describe("colour maths", () => {
     expect(hsva.a).toBe(0.4);
     const preserved = rgbaToHsva({ r: 40, g: 40, b: 40, a: 1 }, hsva);
     expect(preserved.h).toBe(hsva.h);
+  });
+
+  it("serialises RGBA to a CSS colour with rounded channels", () => {
+    expect(rgbaToCss({ r: 12.4, g: 0, b: 255, a: 1 })).toBe(
+      "rgba(12, 0, 255, 1)",
+    );
+    expect(rgbaToCss({ r: 34, g: 197, b: 94, a: 0.1 })).toBe(
+      "rgba(34, 197, 94, 0.1)",
+    );
   });
 });
